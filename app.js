@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
 app.post('/login', (req, res) => {
   if (req.body.password === SYS_PWD) {
     req.session.user = true;
-    res.redirect('https://auth.mercadolibre.com.br/authorization?response_type=code&client_id=2933315629786518&redirect_uri=https://mercadoreman.herokuapp.com');
+    res.redirect('https://auth.mercadolivre.com.br/authorization?response_type=code&client_id=2933315629786518&redirect_uri=https://mercadoreman.herokuapp.com');
   } else {
     res.redirect('/?error=senha-incorreta');
   }
