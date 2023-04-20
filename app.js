@@ -40,13 +40,13 @@ app.get('/', (req, res) => {
 app.post('/login', (req, res) => {
   if (req.body.password === SYS_PWD) {
     req.session.user = true;
-    res.redirect('/home');
+    res.redirect('/auth');
   } else {
     res.redirect('/?error=senha-incorreta');
   }
 });
 
-app.get('/home', validateToken, async (req, res) => {
+app.get('/auth', validateToken, async (req, res) => {
   try {
     const meliObject = new MeliObject(res.locals.access_token);
     const user = await meliObject.get('/users/me');
