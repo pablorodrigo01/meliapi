@@ -1,0 +1,24 @@
+{
+  "name": "mercadolibre-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-session": "^1.4.0",
+    "dotenv": "^8.6.0",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "helmet": "^3.23.3",
+    "mercadolibre": "^0.0.13",
+    "multer": "^1.4.4"
+  },
+  "engines": {
+    "node": "19.9.0"
+  }
+}
