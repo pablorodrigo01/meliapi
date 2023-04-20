@@ -65,31 +65,21 @@ app.get('/home', validateToken, async (req, res) => {
   }
 });
 
-app.post('/post', validateToken, upload.single('picture'), async (req, res) => {
+app.get('/posts', validateToken, async (req, res) => {
   try {
     const meliObject = new MeliObject(res.locals.access_token);
     const user = await meliObject.get('/users/me');
-    const predict = await meliObject.get(`/sites/${user.site_id}/category_predictor/predict?title=${encodeURIComponent(req.body.title)}`);
-    await meliObject.post('/items', {
-      title: req.body.title,
-      category_id: predict.id,
-      price: req.body.price,
-      currency_id: req.body.currency,
-      available_quantity: req.body.quantity,
-      buying_mode: 'buy_it_now',
-      listing_type_id: req.body.listing_type,
-      condition: req.body.condition,
-      description: req.body.description,
-      tags: [ 'immediate_payment' ],
-      pictures: [
-        {
-          source: `${req.protocol}://${req.get('host')}/pictures/${req.file.filename}`
-        }
-      ]
-    });
-    console.log('publicado na categoria:', predict.name);
-    console.log('category probability (0-1):', predict.prediction_probability, predict.variations);
-    res.redirect('/posts');
+    const items = (await meliObject.get(`/users/${user.id}/items/search`)).results || [];
+    if (items.length) {
+      const result = [];
+      const promises = items.map(item_id => meliObject.get(`/items/${item_id}`));
+      for await (item of promises) {
+        result.push(item);
+      }
+      res.render('posts', { items: result });
+    } else {
+      res.status(404).send('no items were found :(');
+    }
   } catch(err) {
     console.log('Something went wrong', err);
     res.status(500).send(`Error! ${err}`);
